@@ -36,7 +36,7 @@ deb-src $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
 deb-src $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
 deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
 "| tee /etc/apt/sources.list;
-apt-get update
+apt-get -yqq update
 apt-get -y upgrade
 apt-get -y install unattended-upgrades
 sed -i 's/Download-Upgradeable-Packages "0";/Download-Upgradeable-Packages "1";/g' /etc/apt/apt.conf.d/10periodic
