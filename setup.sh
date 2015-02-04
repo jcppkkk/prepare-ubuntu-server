@@ -3,6 +3,7 @@ set -ex
 grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers || echo "#includedir /etc/sudoers.d" >> /etc/sudoers
 ( umask 226 && echo "${SUDO_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50_${SUDO_USER}_sh )
 
+echo 'EDITOR=vim' >> ~/.bashrc
 echo '"\eOA": history-search-backward
 "\eOB": history-search-forward
 "\e[A": history-search-backward
