@@ -23,7 +23,7 @@ set visible-stats On
 set show-all-if-ambiguous on
 set show-all-if-unmodified on' | tee ~/.inputrc
 
-# Update source list to local
+# Update source list to local mirror
 source /etc/lsb-release
 SITE=http://free.nchc.org.tw/ubuntu/
 echo "# full list `date --rfc-3339=seconds`
