@@ -1,4 +1,5 @@
 # curl -L http://tinyurl.com/usetup | sudo bash
+set -x
 grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers || echo "#includedir /etc/sudoers.d" >> /etc/sudoers
 ( umask 226 && echo "${SUDO_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50_${SUDO_USER}_sh )
 
