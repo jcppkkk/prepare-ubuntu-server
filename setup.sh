@@ -49,6 +49,6 @@ echo 'APT::Periodic::Unattended-Upgrade "1";' | tee -a /etc/apt/apt.conf.d/10per
 # Record /etc changes
 apt-get -y install git etckeeper
 cd /etc
-etckeeper uninit
+yes | etckeeper uninit
 sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
 etckeeper init
