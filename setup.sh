@@ -1,5 +1,7 @@
 # curl -L http://tinyurl.com/uinit | sudo bash
 set -ex
+export DEBIAN_FRONTEND=noninteractive
+
 grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers || echo "#includedir /etc/sudoers.d" >> /etc/sudoers
 ( umask 226 && echo "${SUDO_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50_${SUDO_USER}_sh )
 
@@ -45,9 +47,8 @@ sed -i 's/AutocleanInterval "0";/AutocleanInterval "7";/g' /etc/apt/apt.conf.d/1
 echo 'APT::Periodic::Unattended-Upgrade "1";' | tee -a /etc/apt/apt.conf.d/10periodic
 
 # Record /etc changes
-sudo apt-get -y install git etckeeper
+apt-get -y install git etckeeper
 cd /etc
 etckeeper uninit
-sudo sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
+sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
 etckeeper init
-
