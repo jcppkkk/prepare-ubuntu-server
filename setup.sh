@@ -1,4 +1,4 @@
-# curl -L http://tinyurl.com/uinit | sudo bash
+# curl -sL http://tinyurl.com/uinit | sudo bash
 set -ex
 export DEBIAN_FRONTEND=noninteractive
 
