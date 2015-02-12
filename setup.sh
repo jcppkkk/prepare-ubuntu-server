@@ -40,6 +40,7 @@ deb-src $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
 deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
 "| tee /etc/apt/sources.list;
 apt-get -yqq update
+apt-get -f install
 apt-get -y upgrade || echo "something error while upgrade, but i will continue the setting."
 apt-get -y install unattended-upgrades
 sed -i 's/Download-Upgradeable-Packages "0";/Download-Upgradeable-Packages "1";/g' /etc/apt/apt.conf.d/10periodic
