@@ -3,4 +3,4 @@ Do some essential setup for Ubuntu server
 
 ## Usage
 
-```curl -sL http://git.io/uinit | sudo bash```
+```sudo apt-get install curl && curl -sL http://git.io/uinit | sudo bash```
