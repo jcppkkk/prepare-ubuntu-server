@@ -5,8 +5,8 @@ export DEBIAN_FRONTEND=noninteractive
 grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers || echo "#includedir /etc/sudoers.d" >> /etc/sudoers
 ( umask 226 && echo "${SUDO_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50_${SUDO_USER}_sh )
 
-echo 'EDITOR=vim' >> ~/.bashrc
-echo '"\eOA": history-search-backward
+grep -q 'EDITOR=vim' ~/.bashrc || echo 'EDITOR=vim' >> ~/.bashrc
+grep -q 'for linux console' ~/.inputrc || echo '"\eOA": history-search-backward
 "\eOB": history-search-forward
 "\e[A": history-search-backward
 "\e[B": history-search-forward
