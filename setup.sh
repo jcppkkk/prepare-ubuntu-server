@@ -48,8 +48,8 @@ sed -i 's/AutocleanInterval "0";/AutocleanInterval "7";/g' /etc/apt/apt.conf.d/1
 echo 'APT::Periodic::Unattended-Upgrade "1";' | tee -a /etc/apt/apt.conf.d/10periodic
 
 # Record /etc changes
-apt-get -y install git etckeeper
+apt-get -y install git etckeeper || true
 cd /etc
-yes | etckeeper uninit
+yes | etckeeper uninit || true
 sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
 etckeeper init
