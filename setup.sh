@@ -42,10 +42,15 @@ deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
 apt-get -yqq update
 apt-get -f install
 apt-get -y upgrade || echo "something error while upgrade, but i will continue the setting."
+
+# Auto Update pkgs
 apt-get -y install unattended-upgrades
 sed -i 's/Download-Upgradeable-Packages "0";/Download-Upgradeable-Packages "1";/g' /etc/apt/apt.conf.d/10periodic
 sed -i 's/AutocleanInterval "0";/AutocleanInterval "7";/g' /etc/apt/apt.conf.d/10periodic
 echo 'APT::Periodic::Unattended-Upgrade "1";' | tee -a /etc/apt/apt.conf.d/10periodic
+
+# auto adjust server time
+apt-get -y install ntp
 
 # Record /etc changes
 apt-get -y install git etckeeper || true
