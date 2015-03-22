@@ -41,7 +41,7 @@ deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
 "| tee /etc/apt/sources.list;
 apt-get -yqq update
 apt-get -f install
-apt-get -y upgrade || echo "something error while upgrade, but i will continue the setting."
+apt-get -y upgrade || true
 
 # Auto Update pkgs
 apt-get -y install unattended-upgrades
