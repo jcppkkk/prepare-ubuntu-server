@@ -39,9 +39,9 @@ deb-src $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
 deb-src $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
 deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
 "| tee /etc/apt/sources.list;
-apt-get -yqq update
+apt-get -yq update
 apt-get -f install
-apt-get -y upgrade || true
+apt-get -y upgrade < /dev/null
 
 # Auto Update pkgs
 apt-get -y install unattended-upgrades
