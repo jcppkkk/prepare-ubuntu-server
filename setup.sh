@@ -1,5 +1,5 @@
-# curl -sL http://git.io/uinit | sudo bash
-set -ex
+# curl -sL http://git.io/uinit | sudo bash /dev/stdin
+set -x
 export DEBIAN_FRONTEND=noninteractive
 
 grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers || echo "#includedir /etc/sudoers.d" >> /etc/sudoers
@@ -41,7 +41,7 @@ deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
 "| tee /etc/apt/sources.list;
 apt-get -yq update
 apt-get -f install
-apt-get -y upgrade < /dev/null
+apt-get -y upgrade
 
 # Auto Update pkgs
 apt-get -y install unattended-upgrades
@@ -53,8 +53,8 @@ echo 'APT::Periodic::Unattended-Upgrade "1";' | tee -a /etc/apt/apt.conf.d/10per
 apt-get -y install ntp
 
 # Record /etc changes
-apt-get -y install git etckeeper || true
+apt-get -y install git etckeeper
 cd /etc
-yes | etckeeper uninit || true
+yes | etckeeper uninit
 sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
 etckeeper init
