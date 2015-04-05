@@ -6,5 +6,5 @@ Do some essential setup for Ubuntu server
 ```
 curl -sL http://git.io/uinit | sudo bash /dev/stdin
 
-GET http://git.io/uinit | sudo bash
+GET http://git.io/uinit | sudo bash /dev/stdin
 ```
