@@ -1,6 +1,6 @@
-# wget --no-check-certificate -qO - http://git.io/uinit | bash
+# curl -sL http://git.io/uinit | bash
 if [ "$_uinit_script" != "yes" ]; then
-  wget --no-check-certificate -qO - http://git.io/uinit > /tmp/uinit
+  curl -sL http://git.io/uinit > /tmp/uinit
   bash /tmp/uinit _uinit_script=yes
   rm -f /tmp/uinit
   exit
