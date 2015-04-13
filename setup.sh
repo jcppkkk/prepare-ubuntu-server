@@ -1,5 +1,5 @@
 # wget --no-check-certificate -qO - http://git.io/uinit | bash
-cat > uinit
+cat > /tmp/uinit && bash /tmp/uinit && rm /tmp/uinit
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
