@@ -3,7 +3,7 @@ set -x
 
 if [ "$UINIT_SCRIPT" != "yes" ]; then
   curl -sL http://git.io/uinit > /tmp/uinit
-  UINIT_SCRIPT=yes bash /tmp/uinit
+  sudo UINIT_SCRIPT=yes bash /tmp/uinit
   exit
 fi
 
@@ -27,8 +27,10 @@ set show-all-if-ambiguous on
 set show-all-if-unmodified on' | tee ~/.inputrc
 
 # Update source list to local mirror
+
+if [ -e /etc/lsb-release ]; then
 source /etc/lsb-release
-SITE=http://free.nchc.org.tw/ubuntu/
+SITE=http://free.nchc.org.tw/ubuntu/  
 echo "# full list `date --rfc-3339=seconds`
 deb $SITE $DISTRIB_CODENAME main restricted universe multiverse
 deb $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
@@ -39,6 +41,8 @@ deb-src $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
 deb-src $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
 deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
 "| tee /etc/apt/sources.list;
+fi
+
 apt-get -yq update
 aptitude install -y squid-deb-proxy-client
 
