@@ -1,9 +1,9 @@
 # curl -sL http://git.io/uinit | bash
 set -x
 
-if [ "$_uinit_script" != "yes" ]; then
+if [ "UINIT_SCRIPT" != "yes" ]; then
   curl -sL http://git.io/uinit > /tmp/uinit
-  bash /tmp/uinit _uinit_script=yes
+  UINIT_SCRIPT=yes bash /tmp/uinit
   exit
 fi
 
