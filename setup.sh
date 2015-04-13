@@ -52,7 +52,10 @@ sed -i 's/Download-Upgradeable-Packages "0";/Download-Upgradeable-Packages "1";/
 sed -i 's/AutocleanInterval "0";/AutocleanInterval "7";/g' /etc/apt/apt.conf.d/10periodic
 echo 'APT::Periodic::Unattended-Upgrade "1";' | tee -a /etc/apt/apt.conf.d/10periodic
 
-cd /etc
-yes | etckeeper uninit
-sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
-etckeeper init
+
+if grep '#VCS="git"' /etc/etckeeper/etckeeper.conf; then
+  yes | etckeeper uninit
+  sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
+  cd /etc
+  etckeeper init
+fi
