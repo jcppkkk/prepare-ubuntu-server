@@ -40,11 +40,12 @@ deb-src $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
 deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
 "| tee /etc/apt/sources.list;
 apt-get -yq update
+aptitude install -y squid-deb-proxy-client
 
 # Auto Update pkgs
 # auto adjust server time
 # Record /etc changes
-aptitude install -y unattended-upgrades ntp git etckeeper
+aptitude install -y unattended-upgrades ntp git etckeeper 
 aptitude safe-upgrade  -y
 
 sed -i 's/Download-Upgradeable-Packages "0";/Download-Upgradeable-Packages "1";/g' /etc/apt/apt.conf.d/10periodic
