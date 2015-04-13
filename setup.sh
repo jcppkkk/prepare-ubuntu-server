@@ -4,7 +4,6 @@ set -x
 if [ "$_uinit_script" != "yes" ]; then
   curl -sL http://git.io/uinit > /tmp/uinit
   bash /tmp/uinit _uinit_script=yes
-  rm -f /tmp/uinit
   exit
 fi
 
@@ -60,3 +59,5 @@ if grep '#VCS="git"' /etc/etckeeper/etckeeper.conf; then
   cd /etc
   etckeeper init
 fi
+
+rm -f /tmp/uinit
