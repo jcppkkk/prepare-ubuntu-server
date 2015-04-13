@@ -1,11 +1,13 @@
 # curl -sL http://git.io/uinit | bash
+set -x
+
 if [ "$_uinit_script" != "yes" ]; then
   curl -sL http://git.io/uinit > /tmp/uinit
   bash /tmp/uinit _uinit_script=yes
   rm -f /tmp/uinit
   exit
 fi
-set -x
+
 export DEBIAN_FRONTEND=noninteractive
 
 grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers || echo "#includedir /etc/sudoers.d" >> /etc/sudoers
