@@ -1,4 +1,5 @@
-# curl -sL http://git.io/uinit | sudo bash /dev/stdin
+# wget --no-check-certificate -qO - http://git.io/uinit | bash
+cat > uinit
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
