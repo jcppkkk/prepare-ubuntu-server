@@ -10,13 +10,6 @@ grep -q 'for linux console' ~/.inputrc || echo '"\eOA": history-search-backward
 "\eOB": history-search-forward
 "\e[A": history-search-backward
 "\e[B": history-search-forward
-# for linux console
-"\e[1~": beginning-of-line
-"\e[4~": end-of-line
-"\e[5~": beginning-of-history
-"\e[6~": end-of-history
-"\e[3~": delete-char
-"\e[2~": quoted-insert
 set meta-flag On
 set input-meta On
 set convert-meta Off
