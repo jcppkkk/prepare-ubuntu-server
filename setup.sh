@@ -1,5 +1,10 @@
 # wget --no-check-certificate -qO - http://git.io/uinit | bash
-cat > /tmp/uinit && bash /tmp/uinit && rm /tmp/uinit
+if [ "$_uinit_script" != "yes" ]; then
+  wget --no-check-certificate -qO - http://git.io/uinit > /tmp/uinit
+  bash /tmp/uinit
+  rm -f /tmp/uinit
+  exit
+fi
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
