@@ -49,12 +49,8 @@ fi
 
 apt-get -yq update
 aptitude install -y squid-deb-proxy-client
-
-# Auto Update pkgs
-# auto adjust server time
-# Record /etc changes
-aptitude install -y unattended-upgrades ntp git etckeeper 
 aptitude safe-upgrade  -y
+aptitude install -y unattended-upgrades ntp git etckeeper
 
 sed -i 's/Download-Upgradeable-Packages "0";/Download-Upgradeable-Packages "1";/g' /etc/apt/apt.conf.d/10periodic
 sed -i 's/AutocleanInterval "0";/AutocleanInterval "7";/g' /etc/apt/apt.conf.d/10periodic
