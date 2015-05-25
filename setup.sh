@@ -2,7 +2,11 @@
 set -x
 
 if [ "$UINIT_SCRIPT" != "yes" ]; then
-  curl -sL http://git.io/uinit > /tmp/uinit
+  if [ -f "$0" ]; then
+    cp "$0" /tmp/uinit
+  else
+    curl -sL http://git.io/uinit > /tmp/uinit
+  fi
   sudo UINIT_SCRIPT=yes bash /tmp/uinit
   exit
 fi
