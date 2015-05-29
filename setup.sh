@@ -5,7 +5,7 @@ if [ "$UINIT_SCRIPT" != "yes" ]; then
   if [ -f "$0" ]; then
     cp "$0" /tmp/uinit
   else
-    curl -sL http://git.io/uinit > /tmp/uinit
+    curl -sL bit.ly/prep-ubuntu > /tmp/uinit
   fi
   sudo UINIT_SCRIPT=yes bash /tmp/uinit
   exit
