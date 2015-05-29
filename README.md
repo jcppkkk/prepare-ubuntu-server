@@ -4,7 +4,7 @@ Do some essential setup for Ubuntu server
 ## Usage
 
 ```
-curl -sL http://git.io/uinit | bash
+curl -sL bit.ly/prep-ubuntu | bash
 
-GET http://git.io/uinit | sudo bash /dev/stdin
+GET bit.ly/prep-ubuntu | sudo bash /dev/stdin
 ```
