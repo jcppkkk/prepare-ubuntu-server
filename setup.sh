@@ -57,6 +57,8 @@ sed -i 's/Download-Upgradeable-Packages "0";/Download-Upgradeable-Packages "1";/
 sed -i 's/AutocleanInterval "0";/AutocleanInterval "7";/g' /etc/apt/apt.conf.d/10periodic
 echo 'APT::Periodic::Unattended-Upgrade "1";' | tee -a /etc/apt/apt.conf.d/10periodic
 
+git config --global user.name || git config --global user.name "root"
+git config --global user.email || git config --global user.email "root@`hostname`"
 
 if grep '#VCS="git"' /etc/etckeeper/etckeeper.conf; then
   yes | etckeeper uninit
