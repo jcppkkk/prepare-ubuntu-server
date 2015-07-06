@@ -53,9 +53,14 @@ apt-get -yq update
 (aptitude safe-upgrade  -y)
 (aptitude install -y unattended-upgrades ntp git etckeeper)
 
-sed -i 's/Download-Upgradeable-Packages "0";/Download-Upgradeable-Packages "1";/g' /etc/apt/apt.conf.d/10periodic
-sed -i 's/AutocleanInterval "0";/AutocleanInterval "7";/g' /etc/apt/apt.conf.d/10periodic
-echo 'APT::Periodic::Unattended-Upgrade "1";' | tee -a /etc/apt/apt.conf.d/10periodic
+echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades
+cat <<EOF > /etc/apt/apt.conf.d/10periodic
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::AutocleanInterval "7";
+EOF
 
 git config --global user.name || git config --global user.name "root"
 git config --global user.email || git config --global user.email "root@`hostname`"
