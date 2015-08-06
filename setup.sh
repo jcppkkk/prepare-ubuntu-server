@@ -55,6 +55,7 @@ apt-get -yq update
 
 echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades
+sed -ri "s/\/\/(.*-updates.*)/\1/" /etc/apt/apt.conf.d/50unattended-upgrades
 cat <<EOF > /etc/apt/apt.conf.d/10periodic
 APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Download-Upgradeable-Packages "1";
