@@ -28,7 +28,8 @@ set output-meta On
 set completion-ignore-case On
 set visible-stats On
 set show-all-if-ambiguous on
-set show-all-if-unmodified on' | tee ~/.inputrc
+set show-all-if-unmodified on
+$include /etc/inputrc' | tee ~/.inputrc
 
 # Update source list to local mirror
 
