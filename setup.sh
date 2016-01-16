@@ -1,3 +1,4 @@
+#!/bin/bash
 # curl -sL http://git.io/uinit | bash
 set -x
 
