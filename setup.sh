@@ -36,7 +36,7 @@ $include /etc/inputrc' | tee ~/.inputrc
 
 if [ -e /etc/lsb-release ]; then
 source /etc/lsb-release
-SITE=http://free.nchc.org.tw/ubuntu/  
+SITE=http://tw.archive.ubuntu.com/ubuntu/  
 echo "# full list `date --rfc-3339=seconds`
 deb $SITE $DISTRIB_CODENAME main restricted universe multiverse
 deb $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
