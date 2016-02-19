@@ -50,7 +50,6 @@ deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
 fi
 
 apt-get -yq update
-(aptitude install -y squid-deb-proxy-client)
 (sudo apt-get autoremove -y)
 (aptitude safe-upgrade  -y)
 (aptitude install -y unattended-upgrades ntp git etckeeper)
