@@ -1,6 +1,6 @@
 #!/bin/bash
 # curl -sL http://git.io/uinit | bash
-set -x
+set -xe
 
 if [ "$UINIT_SCRIPT" != "yes" ]; then
   if [ -f "$0" ]; then
