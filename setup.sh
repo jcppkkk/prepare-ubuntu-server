@@ -51,9 +51,9 @@ fi
 
 apt-get -yq update
 (sudo apt-get autoremove -y)
-(sudo apt-get install aptitude)
-(sudo aptitude safe-upgrade  -y)
-(sudo aptitude install -y unattended-upgrades ntp git etckeeper)
+(sudo apt-get install -y aptitude)
+(sudo aptitude -y safe-upgrade)
+(sudo aptitude install -y unattended-upgrades ntp git etckeeper nfs-common sysstat)
 
 echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades
