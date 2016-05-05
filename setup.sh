@@ -15,22 +15,9 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 
 grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers || echo "#includedir /etc/sudoers.d" >> /etc/sudoers
-( umask 226 && echo "${SUDO_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50_${SUDO_USER}_sh )
+( umask 226 && echo "${SUDO_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50set convert-meta _${SUDO_USER}_sh )
 
 grep -q 'EDITOR=vim' ~/.bashrc || echo 'EDITOR=vim' >> ~/.bashrc
-grep -q 'for linux console' ~/.inputrc || echo '"\eOA": history-search-backward
-"\eOB": history-search-forward
-"\e[A": history-search-backward
-"\e[B": history-search-forward
-set meta-flag On
-set input-meta On
-set convert-meta Off
-set output-meta On
-set completion-ignore-case On
-set visible-stats On
-set show-all-if-ambiguous on
-set show-all-if-unmodified on
-$include /etc/inputrc' | tee ~/.inputrc
 
 # Update source list to local mirror
 
