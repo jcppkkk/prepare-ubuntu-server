@@ -3,7 +3,7 @@
 set -xe
 
 if [ "$UINIT_SCRIPT" != "yes" ]; then
-  if [ -f "$0" ]; then
+  if [ -f "$0" && "$0" != "/tmp/uinit" ]; then
     cp "$0" /tmp/uinit
   else
     curl -sL bit.ly/prep-ubuntu > /tmp/uinit
