@@ -5,24 +5,25 @@
 if [[ ! -f "$0" ]]; then
 	echo "Download uinit to PWD..."
 	curl -sL http://git.io/uinit > uinit
+	chmod u+x uinit
 	echo "If you want change settings, press Ctrl-C now."
 	echo "Sleep 5 seconds..."
 	sleep 5
-	exec sudo bash uinit $@
+	exec sudo bash uinit "$@"
 fi
 
 if (( $(id -u) != 0 )); then
-	exec sudo bash $0 $@
+	exec sudo bash "$0" "$@"
 fi
 
 set -xe
-{ echo $0 $@; } 2>/dev/null
-{ echo ================================; } 2>/dev/null
+{ echo "$0" "$@"; } 2>/dev/null
+{ echo "================================"; } 2>/dev/null
 
 export DEBIAN_FRONTEND=noninteractive
 
 grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers || echo "#includedir /etc/sudoers.d" >> /etc/sudoers
-( umask 226 && echo "${SUDO_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50_${SUDO_USER}_sh )
+( umask 226 && echo "${SUDO_USER} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/50_${SUDO_USER}_sh" )
 
 grep -q 'EDITOR=vim' ~/.bashrc || echo 'EDITOR=vim' >> ~/.bashrc
 
@@ -31,7 +32,7 @@ grep -q 'EDITOR=vim' ~/.bashrc || echo 'EDITOR=vim' >> ~/.bashrc
 if [ -e /etc/lsb-release ]; then
 	source /etc/lsb-release
 	SITE=http://free.nchc.org.tw/ubuntu/  
-	echo "# full list `date --rfc-3339=seconds`
+	echo "# full list $(date --rfc-3339=seconds)
 	deb $SITE $DISTRIB_CODENAME main restricted universe multiverse
 	deb $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
 	deb $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
@@ -61,7 +62,7 @@ Unattended-Upgrade::Remove-Unused-Dependencies "true";
 EOF
 
 git config --global user.name || git config --global user.name "root"
-git config --global user.email || git config --global user.email "root@`hostname`"
+git config --global user.email || git config --global user.email "root@$(hostname)"
 
 if grep '#VCS="git"' /etc/etckeeper/etckeeper.conf; then
 	yes | etckeeper uninit
