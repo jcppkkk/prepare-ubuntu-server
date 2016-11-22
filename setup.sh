@@ -1,8 +1,9 @@
 #!/bin/bash
 # curl -sL http://git.io/uinit | bash
 
-Config()
+__script_env()
 {
+	echo "================================"
 	export DEBIAN_FRONTEND=noninteractive
 	printf '%-20s %s\n' APT_REPO_URL \
 		"${APT_REPO_URL:=${1:-http://free.nchc.org.tw/ubuntu/}}";
@@ -13,7 +14,7 @@ Config()
 	echo "================================"
 }
 
-Boostrap()
+__script_bootstrap()
 {
 	# allow local edit
 	if [[ ! -f "$0" ]]; then
@@ -23,15 +24,15 @@ Boostrap()
 		echo "If you want change settings, press Ctrl-C now."
 		echo "Sleep 5 seconds..."
 		sleep 5
-		exec sudo bash uinit "$@"
+		exec sudo -H bash uinit "$@"
 	fi
 
 	if (( $(id -u) != 0 )); then
-		exec sudo bash "$0" "$@"
+		exec sudo -H bash "$0" "$@"
 	fi
 }
 
-Ubuntu_Repo_Config()
+__system_setup_repo()
 {
 	if [ -e /etc/lsb-release ]; then
 		source /etc/lsb-release
@@ -48,7 +49,7 @@ Ubuntu_Repo_Config()
 	fi
 }
 
-Ubuntu_Repo_Timestamp()
+__system_setup_repo_comment()
 {
 	if [ -e /etc/lsb-release ]; then
 		source /etc/lsb-release
@@ -58,7 +59,7 @@ Ubuntu_Repo_Timestamp()
 	fi
 }
 
-SudoNopass()
+__system_setup_sudo_nopass()
 {
 	if ! grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers;then
 		echo "#includedir /etc/sudoers.d" >> /etc/sudoers
@@ -68,41 +69,61 @@ SudoNopass()
 		echo "$SudoNopass_User ALL=(ALL) NOPASSWD:ALL" > "$SudoNopass_Config"
 	)
 }
+__system_config_tz()
+{
+	apt-get install -y python-pip
+	pip install -U tzupdate
+	tzupdate
+}
 
-grep -q 'EDITOR=vim' ~/.bashrc || echo 'EDITOR=vim' >> ~/.bashrc
-
-# Update source list to local mirror
-
-Boostrap $@
-Config $@
-set -xe
-SudoNopass
-Ubuntu_Repo_Config
-Ubuntu_Repo_Timestamp
-
-apt-get -yq update
-apt-get install -y unattended-upgrades ntp git etckeeper nfs-common sysstat
-
-echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
-dpkg-reconfigure -plow unattended-upgrades
-sed -ri "s/\/\/(.*-updates.*)/\1/" /etc/apt/apt.conf.d/50unattended-upgrades
-cat <<-EOF > /etc/apt/apt.conf.d/10periodic
+Unattended_Upgrades()
+{
+	echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
+	dpkg-reconfigure -plow unattended-upgrades
+	sed -ri "s/\/\/(.*-updates.*)/\1/" /etc/apt/apt.conf.d/50unattended-upgrades
+	cat <<-EOF > /etc/apt/apt.conf.d/10periodic
 	APT::Periodic::Update-Package-Lists "1";
 	APT::Periodic::Download-Upgradeable-Packages "1";
 	APT::Periodic::Unattended-Upgrade "1";
 	APT::Periodic::AutocleanInterval "7";
 	Unattended-Upgrade::Remove-Unused-Dependencies "true";
-EOF
+	EOF
+}
 
-git config --global user.name || git config --global user.name "root"
-git config --global user.email || git config --global user.email "root@$(hostname)"
+__system_install_etckepper()
+{
+	if ! grep '^VCS="git"' /etc/etckeeper/etckeeper.conf; then
+		yes | etckeeper uninit
+		pushd /etc
+		sed -i -e 's/^VCS="bzr"/VCS="git"/g' etckeeper.conf
+		etckeeper init
+		popd /etc
+	fi
+	if ! git config --global user.name; then
+		git config --global user.name "root"
+	fi
+	if ! git config --global user.email; then
+		git config --global user.email "root@$(hostname)"
+	fi
+}
 
-if grep '#VCS="git"' /etc/etckeeper/etckeeper.conf; then
-	yes | etckeeper uninit
-	sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
-	cd /etc
-	etckeeper init
-fi
+# Update source list to local mirror
+
+__script_bootstrap $@
+__script_env $@
+__system_setup_sudo_nopass
+__system_setup_repo
+
+apt-get -yq update
+apt-get install -y unattended-upgrades ntp git etckeeper
+
+__system_install_etckepper
+__system_config_tz
+__system_setup_repo_comment
 
 apt-get autoremove
 aptitude full-upgrade -y
+
+# Misc setting
+sudo su - ${SUDO_USER} -c \
+	"grep -q 'EDITOR=vim' ~/.bashrc || echo 'EDITOR=vim' >> ~/.bashrc"
