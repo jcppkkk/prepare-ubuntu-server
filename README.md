@@ -3,8 +3,12 @@ Do some essential setup for Ubuntu server
 
 ## Usage
 
+Use Curl
 ```
-curl -sL bit.ly/prep-ubuntu | bash
+curl -sL http://git.io/uinit | bash
+```
 
-GET bit.ly/prep-ubuntu | sudo bash /dev/stdin
+Use GET command
+```
+GET http://git.io/uinit | bash
 ```

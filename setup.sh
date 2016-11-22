@@ -1,16 +1,23 @@
 #!/bin/bash
 # curl -sL http://git.io/uinit | bash
-set -xe
 
-if [ "$UINIT_SCRIPT" != "yes" ]; then
-  if [ -f "$0" && "$0" != "/tmp/uinit" ]; then
-    cp "$0" /tmp/uinit
-  else
-    curl -sL bit.ly/prep-ubuntu > /tmp/uinit
-  fi
-  sudo UINIT_SCRIPT=yes bash /tmp/uinit
-  exit
+# allow local edit
+if [[ ! -f "$0" ]]; then
+	echo "Download uinit to PWD..."
+	curl -sL http://git.io/uinit > uinit
+	echo "If you want change settings, press Ctrl-C now."
+	echo "Sleep 5 seconds..."
+	sleep 5
+	exec sudo bash uinit $@
 fi
+
+if (( $(id -u) != 0 )); then
+	exec sudo bash $0 $@
+fi
+
+set -xe
+{ echo $0 $@; } 2>/dev/null
+{ echo ================================; } 2>/dev/null
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -22,18 +29,18 @@ grep -q 'EDITOR=vim' ~/.bashrc || echo 'EDITOR=vim' >> ~/.bashrc
 # Update source list to local mirror
 
 if [ -e /etc/lsb-release ]; then
-source /etc/lsb-release
-SITE=http://free.nchc.org.tw/ubuntu/  
-echo "# full list `date --rfc-3339=seconds`
-deb $SITE $DISTRIB_CODENAME main restricted universe multiverse
-deb $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
-deb $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
-deb $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
-deb-src $SITE $DISTRIB_CODENAME main restricted universe multiverse
-deb-src $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
-deb-src $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
-deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
-"| tee /etc/apt/sources.list;
+	source /etc/lsb-release
+	SITE=http://free.nchc.org.tw/ubuntu/  
+	echo "# full list `date --rfc-3339=seconds`
+	deb $SITE $DISTRIB_CODENAME main restricted universe multiverse
+	deb $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
+	deb $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
+	deb $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
+	deb-src $SITE $DISTRIB_CODENAME main restricted universe multiverse
+	deb-src $SITE $DISTRIB_CODENAME-security main restricted universe multiverse
+	deb-src $SITE $DISTRIB_CODENAME-updates main restricted universe multiverse
+	deb-src $SITE $DISTRIB_CODENAME-backports main restricted universe multiverse
+	"| tee /etc/apt/sources.list;
 fi
 
 apt-get -yq update
@@ -57,10 +64,10 @@ git config --global user.name || git config --global user.name "root"
 git config --global user.email || git config --global user.email "root@`hostname`"
 
 if grep '#VCS="git"' /etc/etckeeper/etckeeper.conf; then
-  yes | etckeeper uninit
-  sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
-  cd /etc
-  etckeeper init
+	yes | etckeeper uninit
+	sed -i -e 's/^VCS="bzr"/#VCS="bzr"/g' -e 's/^#VCS="git"/VCS="git"/g' /etc/etckeeper/etckeeper.conf
+	cd /etc
+	etckeeper init
 fi
 
 rm -f /tmp/uinit
