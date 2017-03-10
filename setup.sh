@@ -3,10 +3,11 @@
 
 __script_env()
 {
+	DEFAULT_REPO=$(sed -n '/^deb /{s/.*\(http:[^ ]*\).*/\1/p;q}' /etc/apt/sources.list)
 	echo "================================"
 	export DEBIAN_FRONTEND=noninteractive
 	printf '%-20s %s\n' APT_REPO_URL \
-		"${APT_REPO_URL:=${1:-http://free.nchc.org.tw/ubuntu/}}";
+		"${APT_REPO_URL:=${1:-$DEFAULT_REPO}}";
 	printf '%-20s %s\n' SudoNopass_User \
 		${SudoNopass_User:=${SUDO_USER}}
 	printf '%-20s %s\n' SudoNopass_Config \
@@ -109,8 +110,8 @@ __system_install_etckepper()
 
 # Update source list to local mirror
 
-__script_bootstrap $@
 __script_env $@
+__script_bootstrap $@
 __system_setup_sudo_nopass
 __system_setup_repo
 
