@@ -115,6 +115,13 @@ __system_install_etckepper()
 		git config --global user.email "root@$(hostname)"
 	fi
 }
+__purge_old_kernels()
+{
+	if [[ -n "$(\which purge-old-kernels)" ]]; then
+		ln -fs $(\which purge-old-kernels) /etc/cron.daily/
+		purge-old-kernels
+	fi
+}
 
 # Update source list to local mirror
 
@@ -126,14 +133,14 @@ __system_setup_repo
 
 $PKGCMD -yq update
 $PKGCMD install -y unattended-upgrades ntp git etckeeper
-
 __system_install_etckepper
 __system_config_tz
 __system_setup_repo_comment
+
+__purge_old_kernels
 
 $PKGCMD autoremove
 $PKGCMD full-upgrade -y
 
 # Misc setting
-sudo su - ${SUDO_USER} -c \
-	"grep -q 'EDITOR=vim' ~/.bashrc || echo 'EDITOR=vim' >> ~/.bashrc"
+su - ${SUDO_USER} -c "grep -q 'EDITOR=vim' ~/.bashrc || echo 'EDITOR=vim' >> ~/.bashrc"
