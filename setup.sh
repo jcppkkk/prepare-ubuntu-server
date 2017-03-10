@@ -13,21 +13,24 @@ __script_env()
 	printf '%-20s %s\n' SudoNopass_Config \
 		${SudoNopass_Config:=/etc/sudoers.d/50_${SUDO_USER}_sh}
 	echo "================================"
+	echo "If you want change settings, press Ctrl-C now."
+	echo "Sleep 5 seconds..."
+	sleep 5
 }
 
-__script_bootstrap()
+LOCAL_FILENAME=prepare-ubuntu-server.sh
+__download_to_local()
 {
 	# allow local edit
 	if [[ ! -f "$0" ]]; then
-		echo "Download uinit to PWD..."
-		curl -sL http://git.io/uinit > uinit
-		chmod u+x uinit
-		echo "If you want change settings, press Ctrl-C now."
-		echo "Sleep 5 seconds..."
-		sleep 5
-		exec sudo -H bash uinit "$@"
+		echo "Download setup.sh to PWD..."
+		curl -sL http://git.io/uinit > $LOCAL_FILENAME
+		chmod u+x $LOCAL_FILENAME
+		exec bash $LOCAL_FILENAME "$@"
 	fi
-
+}
+__ensure_sudo()
+{
 	if (( $(id -u) != 0 )); then
 		exec sudo -H bash "$0" "$@"
 	fi
@@ -110,8 +113,9 @@ __system_install_etckepper()
 
 # Update source list to local mirror
 
+__download_to_local $@
+__ensure_sudo $@
 __script_env $@
-__script_bootstrap $@
 __system_setup_sudo_nopass
 __system_setup_repo
 
