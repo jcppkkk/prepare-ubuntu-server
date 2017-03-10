@@ -4,14 +4,15 @@
 __script_env()
 {
 	DEFAULT_REPO=$(sed -n '/^deb /{s/.*\(http:[^ ]*\).*/\1/p;q}' /etc/apt/sources.list)
+	hash apt-get 2>/dev/null && PKGCMD=apt-get
+	hash apt 2>/dev/null && PKGCMD=apt
+	hash aptitude 2>/dev/null && PKGCMD=aptitude
 	echo "================================"
 	export DEBIAN_FRONTEND=noninteractive
-	printf '%-20s %s\n' APT_REPO_URL \
-		"${APT_REPO_URL:=${1:-$DEFAULT_REPO}}";
-	printf '%-20s %s\n' SudoNopass_User \
-		${SudoNopass_User:=${SUDO_USER}}
-	printf '%-20s %s\n' SudoNopass_Config \
-		${SudoNopass_Config:=/etc/sudoers.d/50_${SUDO_USER}_sh}
+	printf '%-20s %s\n' package-command	$PKGCMD
+	printf '%-20s %s\n' apt-repository	${APT_REPO_URL:=${1:-$DEFAULT_REPO}}
+	printf '%-20s %s\n' sudo-nopass-User 	${SudoNopass_User:=${SUDO_USER}}
+	printf '%-20s %s\n' sudo-config		${SudoNopass_Config:=/etc/sudoers.d/50_${SUDO_USER}_sh}
 	echo "================================"
 	echo "If you want change settings, press Ctrl-C now."
 	echo "Sleep 5 seconds..."
@@ -123,15 +124,15 @@ __script_env $@
 __system_setup_sudo_nopass
 __system_setup_repo
 
-apt-get -yq update
-apt-get install -y unattended-upgrades ntp git etckeeper
+$PKGCMD -yq update
+$PKGCMD install -y unattended-upgrades ntp git etckeeper
 
 __system_install_etckepper
 __system_config_tz
 __system_setup_repo_comment
 
-apt-get autoremove
-aptitude full-upgrade -y
+$PKGCMD autoremove
+$PKGCMD full-upgrade -y
 
 # Misc setting
 sudo su - ${SUDO_USER} -c \
