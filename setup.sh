@@ -73,9 +73,13 @@ __system_setup_sudo_nopass()
 		echo "$SudoNopass_User ALL=(ALL) NOPASSWD:ALL" > "$SudoNopass_Config"
 	)
 }
+__pip()
+{
+	curl --silent --show-error --retry 5 https://bootstrap.pypa.io/get-pip.py | sudo python2.7
+}
 __system_config_tz()
 {
-	apt-get install -y python-pip
+	__pip
 	pip install -U tzupdate
 	tzupdate
 }
