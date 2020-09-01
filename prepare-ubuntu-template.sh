@@ -1,24 +1,21 @@
 #!/bin/bash
 id
 
-if [ `id -u` -ne 0 ]; then
-	echo Need sudo
-	exit 1
+if [[ $(id -u) != 0 ]]; then
+    echo "Requires root privilege"
+    exit 1
 fi
 set -v
-#add VMware package keys
+# Add VMware package keys
 wget http://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-DSA-KEY.pub -O - | apt-key add -
-
-#update apt-cache
 apt-get update
-
-#install packages
 apt-get install -y open-vm-tools
 
-#Stop services for cleanup
-service rsyslog stop
+# Upgrade system
+apt-get dist-upgrade -y
 
-#clear audit logs
+# Clear audit logs
+service rsyslog stop
 if [ -f /var/log/audit/audit.log ]; then
     cat /dev/null > /var/log/audit/audit.log
 fi
@@ -29,19 +26,20 @@ if [ -f /var/log/lastlog ]; then
     cat /dev/null > /var/log/lastlog
 fi
 
-#cleanup persistent udev rules
+# Cleanup persistent udev rules
 if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
     rm /etc/udev/rules.d/70-persistent-net.rules
 fi
 
-#cleanup /tmp directories
+# Cleanup /tmp directories
 rm -rf /tmp/*
 rm -rf /var/tmp/*
 
-#cleanup current ssh keys
+# Cleanup current ssh keys
+service ssh stop
 rm -f /etc/ssh/ssh_host_*
 
-#add check for ssh keys on reboot...regenerate if neccessary
+# Check for ssh keys on reboot...regenerate if neccessary
 cat <<EOL | sudo tee /etc/rc.local
 #!/bin/sh -e
 #
@@ -59,13 +57,20 @@ cat <<EOL | sudo tee /etc/rc.local
 test -f /etc/ssh/ssh_host_dsa_key || dpkg-reconfigure openssh-server
 exit 0
 EOL
+chmod u+x /etc/rc.local
 
-#reset hostname
+# Reset hostname
 cat /dev/null > /etc/hostname
 
-#cleanup apt
-apt-get clean
+# Cleanup apt
+apt clean
 
-#cleanup shell history
+# Zerofree Disk
+cat /dev/zero >> /zero; rm -f /zero
+
+# Cleanup shell history
 history -c
 history -w
+
+# Shutdown
+shutdown -P now
