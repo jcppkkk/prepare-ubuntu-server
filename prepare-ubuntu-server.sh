@@ -4,21 +4,21 @@ trap 'echo "Error: Script ${BASH_SOURCE[0]} Line $LINENO"' ERR
 set -o errtrace # If set, the ERR trap is inherited by shell functions.
 set -e
 
-LOCAL_FILENAME=prepare-ubuntu-server.sh
+# auto sudo
+if (( $(id -u) != 0 )); then
+    exec sudo -H bash "$0" "$@"
+fi
+
+# use a local copy in case need to modify it
 task_download_to_local()
 {
+    LOCAL_FILENAME=prepare-ubuntu-server.sh
     # allow local edit
     if [[ ! -f "$0" ]]; then
         echo "Download setup.sh to PWD..."
         curl -sL http://git.io/uinit > $LOCAL_FILENAME
         chmod u+x $LOCAL_FILENAME
         exec bash $LOCAL_FILENAME "$@"
-    fi
-}
-task_ensure_sudo()
-{
-    if (( $(id -u) != 0 )); then
-        exec sudo -H bash "$0" "$@"
     fi
 }
 
@@ -98,7 +98,6 @@ task_purge_old_kernels()
 }
 
 task_download_to_local $@
-task_ensure_sudo $@
 task_script_env_header $@
 
 # Update source list to local mirror
@@ -118,8 +117,8 @@ $PKGCMD full-upgrade -y
 # Setup unattended upgrades
 read -e -p "Setup unattended upgrades? [y/n] " -i "y" ANS
 if [[ "$ANS" == y ]]; then
-	$PKGCMD install -y unattended-upgrades
-	task_unattended_upgrades
+    $PKGCMD install -y unattended-upgrades
+    task_unattended_upgrades
 fi
 
 # Setup user ubuntu to nopass

@@ -1,4 +1,8 @@
 #!/bin/bash
+trap 'echo "Error: Script ${BASH_SOURCE[0]} Line $LINENO"' ERR
+set -o errtrace # If set, the ERR trap is inherited by shell functions.
+set -e
+
 id
 
 if [[ $(id -u) != 0 ]]; then
