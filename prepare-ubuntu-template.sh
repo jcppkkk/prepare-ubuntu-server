@@ -11,7 +11,6 @@ if [[ $(id -u) != 0 ]]; then
 fi
 set -v
 # Add VMware package keys
-wget http://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-DSA-KEY.pub -O - | apt-key add -
 apt-get update
 apt-get install -y open-vm-tools
 
