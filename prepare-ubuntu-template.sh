@@ -69,7 +69,8 @@ cat /dev/null > /etc/hostname
 apt clean
 
 # Zerofree Disk
-cat /dev/zero >> /zero; rm -f /zero
+cat /dev/zero >> /zero || true
+rm -f /zero
 
 # Cleanup shell history
 history -c
