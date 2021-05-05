@@ -72,6 +72,11 @@ apt clean
 cat /dev/zero >> /zero || true
 rm -f /zero
 
+# Avoid use DHCP with same id
+echo -n > /etc/machine-id
+rm /var/lib/dbus/machine-id
+ln -s /etc/machine-id /var/lib/dbus/machine-id
+
 # Cleanup shell history
 history -c
 history -w
